@@ -4,8 +4,8 @@ import pca
 import math
 
 def getMCBool(Wopt, featureI, Z):
-    receivedIndex = np.argmax((Wopt * featureI)[:-1,0])
-    trueIndex = np.argmax(Z[:-1,0])
+    receivedIndex = np.argmax((Wopt * featureI)[:-1,0]) #Remove the padding 
+    trueIndex = np.argmax(Z[:-1,0]) #Remove the padding 
     return not (receivedIndex == trueIndex)
 
 infile = open("mfeat-pix.txt", "r")
@@ -37,9 +37,7 @@ j = 0
 k = 0
 num = 0
 
-# number of features we want to extract
-m = 200
-
+#Parse the data, and separates it to training data and testing data
 raw = infile.read().splitlines()
 print(len(raw))
 for line in raw:
@@ -88,7 +86,7 @@ def linearRegression(tr, te, m, Zee):
 
     Phi = ctData.transpose()
 
-
+    # Compute the Wopt
     Wopt = (inv(Phi.transpose() * Phi) * Phi.transpose() * Z.transpose()).transpose()
     print(Wopt.shape)
 
@@ -97,32 +95,30 @@ def linearRegression(tr, te, m, Zee):
     SEkTest = 0
     MRTest = 0
 
+    # Calculate the mean square errors and misclassification ratio for the training and testing 
     for i in range (0, 1000):
-        SEkTrain += pow(norm((Wopt * ctData[:,i] - Z[:,i])[:-1,0]), 2) #Removing the bias
-
+        SEkTrain += pow(norm((Wopt * ctData[:,i] - Z[:,i])[:-1,0]), 2) #Removing the padding
     SEkTrain /= 1000
 
     for i in range(0, 1000):
         MRTrain += getMCBool(Wopt, ctData[:,i], Z[:, i])
-
     MRTrain /= 1000.0
 
     for i in range (0, 1000):
-        test = pow(norm((Wopt * ctestData[:,i] - Z[:,i])[:-1,0]), 2) #Removing the bias
+        test = pow(norm((Wopt * ctestData[:,i] - Z[:,i])[:-1,0]), 2) #Removing the padding
         SEkTest += test
-        # print(test)
-
     SEkTest /= 1000
+    
     for i in range(0, 1000):
         MRTest += getMCBool(Wopt, ctestData[:,i], Z[:, i])
     MRTest /= 1000.0
 
-    print SEkTrain, MRTrain
-    print SEkTest, MRTest
+    #print SEkTrain, MRTrain
+    #print SEkTest, MRTest
     return SEkTrain, MRTrain, SEkTest, MRTest
 
+# We don't want to calculate everything each time we want to plot it
 datafile = open("ex8results.txt", "w")
-
 for i in range(1, 241):
     a, b, c, d = linearRegression(trainData, testData, i, Z)
     datafile.write("{0} {1} {2} {3}\n".format(a, b, c, d))

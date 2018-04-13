@@ -1,3 +1,5 @@
+# Modularized the previous homework into functions 
+
 import numpy as np
 import math
 
@@ -13,7 +15,6 @@ def chunkIt(seq, num):
     return out
 
 def centerDataPoints(x):
-    
     sumX = np.zeros(len(x[0]))
     for i in range(0, len(x)):
         sumX += x[i]
@@ -34,7 +35,7 @@ def sigmaGetter(Uvec, Xmat):
 
 
 
-def pca(dataPoints, m):
+def pca(dataPoints, m, biasPadding = True):
     N = len(dataPoints)
     originalDP = np.matrix(dataPoints).transpose()
     mean, cDataPoints = centerDataPoints(dataPoints)
