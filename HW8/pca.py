@@ -83,4 +83,4 @@ def pca(dataPoints, m):
     Umprime = V[:m,:]
 
     print(Umprime)
-    return Umprime
+    return mean, Umprime
