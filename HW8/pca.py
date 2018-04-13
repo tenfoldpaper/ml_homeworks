@@ -13,6 +13,7 @@ def chunkIt(seq, num):
     return out
 
 def centerDataPoints(x):
+    
     sumX = np.zeros(len(x[0]))
     for i in range(0, len(x)):
         sumX += x[i]
