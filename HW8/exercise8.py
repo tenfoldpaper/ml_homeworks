@@ -2,10 +2,11 @@ import numpy as np
 from numpy.linalg import *
 import pca
 import math
+from kmeans import kMeans
 
 def getMCBool(Wopt, featureI, Z):
-    receivedIndex = np.argmax((Wopt * featureI)[:-1,0]) #Remove the padding 
-    trueIndex = np.argmax(Z[:-1,0]) #Remove the padding 
+    receivedIndex = np.argmax((Wopt * featureI)[:-1,0]) #Remove the padding
+    trueIndex = np.argmax(Z[:-1,0]) #Remove the padding
     return not (receivedIndex == trueIndex)
 
 infile = open("mfeat-pix.txt", "r")
@@ -67,35 +68,38 @@ for line in raw:
 
 infile.close()
 
-def linearRegression(tr, te, m, Zee):
+def linearRegression(tr, te, m, Zee, k=False):
     trainData = tr
     testData = te
     Z = Zee
 
-    #pca matrix transposed
-    mean, pcaMatT = pca.pca(trainData, m)
+    if(k):
+        featureVectors = kMeans(trainData, m)
+    else:
+	#pca matrix transposed
+    	mean, featureVectors = pca.pca(trainData, m)
     #to extract 1st column: pcaMatT[:, 0]
 
     trainData = np.matrix(trainData).transpose()
     testData = np.matrix(testData).transpose()
 
-    pcaMatT = np.pad(pcaMatT, ((0, 1),(0, 0)), 'constant', constant_values = 1)
+    featureVectors = np.pad(featureVectors, ((0, 1),(0, 0)), 'constant', constant_values = 1)
     #get compressed training data
-    ctData = pcaMatT * trainData
-    ctestData = pcaMatT * testData
+    ctData = featureVectors * trainData
+    ctestData = featureVectors * testData
 
     Phi = ctData.transpose()
 
     # Compute the Wopt
     Wopt = (inv(Phi.transpose() * Phi) * Phi.transpose() * Z.transpose()).transpose()
-    print(Wopt.shape)
+    # print(Wopt.shape)
 
     SEkTrain = 0
     MRTrain = 0
     SEkTest = 0
     MRTest = 0
 
-    # Calculate the mean square errors and misclassification ratio for the training and testing 
+    # Calculate the mean square errors and misclassification ratio for the training and testing
     for i in range (0, 1000):
         SEkTrain += pow(norm((Wopt * ctData[:,i] - Z[:,i])[:-1,0]), 2) #Removing the padding
     SEkTrain /= 1000
@@ -108,7 +112,7 @@ def linearRegression(tr, te, m, Zee):
         test = pow(norm((Wopt * ctestData[:,i] - Z[:,i])[:-1,0]), 2) #Removing the padding
         SEkTest += test
     SEkTest /= 1000
-    
+
     for i in range(0, 1000):
         MRTest += getMCBool(Wopt, ctestData[:,i], Z[:, i])
     MRTest /= 1000.0
@@ -119,8 +123,8 @@ def linearRegression(tr, te, m, Zee):
 
 # We don't want to calculate everything each time we want to plot it
 datafile = open("ex8results.txt", "w")
-for i in range(1, 241):
-    a, b, c, d = linearRegression(trainData, testData, i, Z)
+for i in range(1, 40):
+    a, b, c, d = linearRegression(trainData, testData, i, Z, k = True)
     datafile.write("{0} {1} {2} {3}\n".format(a, b, c, d))
 
 datafile.close()
