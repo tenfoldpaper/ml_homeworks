@@ -93,7 +93,8 @@ def kMeans(dataPoints, K):
                 vecsum += S[k][j]
 
             #Divide vecsum by # of vectors in Sn
-            vecsum = np.divide(vecsum, len(S[k]))
+            if(len(S[k])):
+                vecsum = np.divide(vecsum, len(S[k]))
 
             sMeans.append(vecsum)
 

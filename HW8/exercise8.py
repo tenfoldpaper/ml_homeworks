@@ -122,9 +122,9 @@ def linearRegression(tr, te, m, Zee, k=False):
     return SEkTrain, MRTrain, SEkTest, MRTest
 
 # We don't want to calculate everything each time we want to plot it
-datafile = open("ex8results.txt", "w")
-for i in range(1, 40):
+datafile = open("ex8kmeans.txt", "w")
+for i in range(1, 800):
     a, b, c, d = linearRegression(trainData, testData, i, Z, k = True)
     datafile.write("{0} {1} {2} {3}\n".format(a, b, c, d))
-
+    print("Handling iteration # {0}".format(i))
 datafile.close()
