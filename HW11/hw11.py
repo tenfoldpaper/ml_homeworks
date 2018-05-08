@@ -5,12 +5,25 @@ import numpy as np
 random.seed()
 random.randint(0, 10)
 
+
 # sigmoid
 def log_sig(a):
     return 1/(1+math.exp(-a))
 
 def log_sig_derived(a):
     return log_sig(a)*(1-log_sig(a))
+
+# eq 47
+def forward_pass_hidden_layer(W, x, wm, n):#x = xm-1 in notes, n = length of the vector
+    #Applies sigmoid to the result 
+    res = (W*x + wm)
+    for i in range(0, n):
+        res[i] = log_sig(res[i])
+    return res
+
+# eq 48
+def forward_pass_output(W, x, wm):
+    return (W*x + wm)
 
 # eq 49
 def loss_function(test_label, train_labe):
@@ -59,9 +72,7 @@ input_layer = [a, b, b0]
 hidden_layer = [x1, x2, b1]
 output_layer = yhat
 
-#Weight matrices
-W1 = np.random.rand(3,3)
-W2 = np.random.rand(3,1)
+
 
 
 '''
