@@ -48,6 +48,8 @@ def delta_hlayer(pot_a_atI, delta_next_layer, w_next_layer_toI, next_layer_size)
         res += (delta_next_layer*w_next_layer_toI)
     return siggy*res
 
+def weight_update(Wm, 
+
 #step size 
 step_size = 0.001
 
@@ -58,11 +60,18 @@ input_data = [[1, 1, 0], [0, 0, 0], [0, 1, 1], [1, 0, 1]]
 input_layer = [a, b, b0]
 hidden_layer = [x1, x2, b1]
 output_layer = yhat
+bias_weights = [1, 1, 1]
 
 #Weight matrices
 W1 = np.random.rand(3,3)
-W2 = np.random.rand(3,1)
+W2 = np.random.rand(3,1) 
 
+#calculating activation vector x1
+x1 = forward_pass(W1, input_layer, bias_weights)
+
+
+def forward_pass(Wm, x, w): # needs to be done for each pair of layers m-1 and m
+	res = log_sig(Wm * x + w)
 
 '''
 #To do: 
