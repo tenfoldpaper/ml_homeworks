@@ -59,7 +59,9 @@ input_layer = [a, b, b0]
 hidden_layer = [x1, x2, b1]
 output_layer = yhat
 
-
+#Weight matrices
+W1 = np.random.rand(3,3)
+W2 = np.random.rand(3,1)
 
 
 '''
