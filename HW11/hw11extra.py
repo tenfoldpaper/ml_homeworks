@@ -137,5 +137,17 @@ for i in range(0, 1000):
     l1 = np.c_[np.ones(1), l1]
     l2 = np.c_[np.ones(1), vectorizedTanh(l1.dot(W1temp))]
     l3 = tanh(l2.dot(W2temp))
-    result.append(l3[0,0])
+    result.append(output_process(l3[0,0]))
     print(Ypp[i]-l3[0,0])
+
+xfile = open("points.txt", 'w')
+pfile = open("vals.txt", 'w')
+for i in range(0, 1000):
+    x = str(Xpp[i])[1:-1]
+    xfile.write(x)
+    xfile.write('\n')
+    pfile.write(str(result[i]))
+    pfile.write('\n')
+
+xfile.close()
+pfile.close()
