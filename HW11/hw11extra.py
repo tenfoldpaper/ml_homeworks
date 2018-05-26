@@ -101,16 +101,14 @@ for x in range(epochs):
             #print "%d XOR %d = %.7f" % (l1[0,1], l1[0,2], l3[0,0])
             procerrorval += np.abs(Ytest[i] - output_process(l3proc[0,0]))
             errorval += np.abs(Ytest[i] - l3cpy[0,0])
-        error.append(errorval)
-        procerror.append(procerrorval)
+        error.append(process_error(errorval/100))
+        procerror.append(process_error(procerrorval/100))
     for i in range(len(X)):
         x = X[i]
         y = Y[i]
         backprop(x, y, W1, W2)
 
-
-
-xvals = range(len(error))
+xvals = range(0, epochs, 5)
 
 plt.figure(1)
 plt.subplot(211)
